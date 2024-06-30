@@ -3,6 +3,7 @@ import { AuthService } from "../../core/services/auth.service";
 import { UserService } from "../../core/services/user.service";
 import { IUser } from "../../core/models";
 import { CommonModule } from "@angular/common";
+import { Subject, takeUntil } from "rxjs";
 
 @Component({
   selector: "aia-dashboard",
@@ -12,7 +13,8 @@ import { CommonModule } from "@angular/common";
   styleUrl: "./dashboard.component.scss",
 })
 export class DashboardComponent implements OnInit {
-  user: IUser;
+  currentUser: IUser;
+  unsubscribe = new Subject<unknown>();
 
   constructor(
     private authService: AuthService,
@@ -20,14 +22,13 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getUser();
+    this.initListeners();
   }
 
-  getUser() {
-    this.authService.getCurrentUser().subscribe({
+  initListeners() {
+    this.userService.currentUser$.pipe(takeUntil(this.unsubscribe)).subscribe({
       next: (res) => {
-        this.user = res as IUser;
-        this.userService.setUser(res as IUser);
+        this.currentUser = res;
       },
       error: (err) => {},
     });

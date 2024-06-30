@@ -1,2 +1,3 @@
-<aia-header></aia-header>
+<aia-header *ngIf="isLoggedIn"></aia-header>
+<aia-loader *ngIf="isLoader"></aia-loader>
 <router-outlet />

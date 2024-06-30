@@ -1,10 +1,12 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Constants } from "../constants/constants";
-import { catchError, throwError } from "rxjs";
+import { catchError, finalize, throwError } from "rxjs";
 import { StorageService } from "./storage.service";
 import { Router } from "@angular/router";
 import { UserService } from "./user.service";
+import { CommonService } from "./common.service";
+import { IUser } from "../models";
 
 const httpOptions = {
   headers: {
@@ -18,12 +20,15 @@ const httpOptions = {
 export class AuthService {
   constructor(
     private http: HttpClient,
+    private router: Router,
     private storageService: StorageService,
     private userService: UserService,
-    private router: Router
+    private commonService: CommonService
   ) {}
 
   login(username: string, password: string) {
+    this.commonService.displayLoader();
+
     const body = JSON.stringify({
       username,
       password,
@@ -33,13 +38,8 @@ export class AuthService {
     return this.http
       .post(Constants.API_URL + "auth/login", body, httpOptions)
       .pipe(
-        catchError((error: HttpErrorResponse) => {
-          if (error.status === 0) {
-            //connection lost
-          }
-
-          return throwError(() => new Error(error.error.message));
-        })
+        catchError(this.handleError),
+        finalize(() => this.commonService.hideLoader())
       );
   }
 
@@ -57,26 +57,23 @@ export class AuthService {
 
     return this.http
       .post(Constants.API_URL + "auth/refresh", body, httpOptions)
-      .pipe(
-        catchError((error: HttpErrorResponse) => {
-          if (error.status === 0) {
-            //connection lost
-          }
-
-          return throwError(() => new Error(error.error.message));
-        })
-      );
+      .pipe(catchError(this.handleError));
   }
 
   getCurrentUser() {
-    return this.http.get(Constants.API_URL + "auth/me").pipe(
-      catchError((error: HttpErrorResponse) => {
-        if (error.status === 0) {
-          //connection lost
-        }
+    this.commonService.displayLoader();
 
-        return throwError(() => new Error(error.error.message));
-      })
+    return this.http.get<IUser>(Constants.API_URL + "auth/me").pipe(
+      catchError(this.handleError),
+      finalize(() => this.commonService.hideLoader())
     );
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    if (error.status === 0) {
+      //connection lost
+    }
+
+    return throwError(() => new Error(error.error.message));
   }
 }

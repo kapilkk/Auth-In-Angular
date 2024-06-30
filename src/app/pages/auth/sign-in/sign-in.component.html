@@ -1,50 +1,73 @@
-<div class="container-fluid h-100">
+<div class="container-fluid h-100 aia__sign-in">
   <div class="row justify-content-center align-items-center h-100">
     <div class="col-12 col-md-5">
-      <form [formGroup]="signInForm" (ngSubmit)="onSubmitForm()">
-        <div class="row">
-          <div class="col-12">
-            <input
-              class="form-control"
-              type="text"
-              formControlName="username"
-              placeholder="Username"
-            />
-            <span
-              class="aia-error"
-              *ngIf="
-                usernameControl?.invalid &&
-                (usernameControl?.dirty || usernameControl?.touched)
-              "
-            >
-              Username is required
-            </span>
-          </div>
-          <div class="col-12">
-            <input
-              class="form-control"
-              type="password"
-              formControlName="password"
-              placeholder="Password"
-            />
-            <span
-              class="aia-error"
-              *ngIf="
-                passwordControl?.invalid &&
-                (passwordControl?.dirty || passwordControl?.touched)
-              "
-            >
-              Password is required</span
-            >
-          </div>
-          <button
-            class="col-12 btn btn-success"
-            [disabled]="signInForm.invalid"
-          >
-            Sign In
-          </button>
+      <div class="card">
+        <div class="card-header">
+          <h1>AIA</h1>
+          <h6>Sign In</h6>
         </div>
-      </form>
+        <div class="card-body">
+          <form [formGroup]="signInForm" (ngSubmit)="onSubmitForm()">
+            <div
+              *ngIf="isError"
+              class="alert alert-danger alert-dismissible fade show"
+              role="alert"
+            >
+              <strong>{{ errorMsg }}</strong>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="row">
+              <div class="col-12 mt-2">
+                <input
+                  class="form-control"
+                  type="text"
+                  formControlName="username"
+                  placeholder="Username"
+                />
+                <span
+                  class="aia__error"
+                  *ngIf="
+                    usernameControl?.invalid &&
+                    (usernameControl?.dirty || usernameControl?.touched)
+                  "
+                >
+                  Username is required
+                </span>
+              </div>
+              <div class="col-12 mt-2">
+                <input
+                  class="form-control"
+                  type="password"
+                  formControlName="password"
+                  placeholder="Password"
+                />
+                <span
+                  class="aia__error"
+                  *ngIf="
+                    passwordControl?.invalid &&
+                    (passwordControl?.dirty || passwordControl?.touched)
+                  "
+                >
+                  Password is required</span
+                >
+              </div>
+              <div class="col-12 mt-4">
+                <button
+                  class="w-100 btn btn-success"
+                  [disabled]="signInForm.invalid"
+                >
+                  Sign In
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </div>

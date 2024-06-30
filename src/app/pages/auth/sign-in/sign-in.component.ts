@@ -19,6 +19,8 @@ import { Router } from "@angular/router";
 })
 export class SignInComponent implements OnInit {
   signInForm: FormGroup;
+  isError: boolean = false;
+  errorMsg: string;
 
   constructor(
     private fb: FormBuilder,
@@ -49,6 +51,7 @@ export class SignInComponent implements OnInit {
   //events
   onSubmitForm() {
     if (this.signInForm.invalid) return;
+    this.isError = false;
 
     this.authService
       .login(this.signInForm.value.username, this.signInForm.value.password)
@@ -59,7 +62,8 @@ export class SignInComponent implements OnInit {
           this.router.navigate(["/dashboard"]);
         },
         error: (err) => {
-          console.log(err);
+          this.isError = true;
+          this.errorMsg = err;
         },
       });
   }

@@ -1,0 +1,17 @@
+.aia__loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background-color: var(--dark-primary-color);
+  opacity: 0.9;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+
+  .spinner-border {
+    position: absolute;
+  }
+}

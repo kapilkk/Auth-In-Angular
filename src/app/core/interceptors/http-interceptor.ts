@@ -5,9 +5,10 @@ import {
   HttpRequest,
 } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { Observable, catchError, switchMap, throwError } from "rxjs";
+import { Observable, catchError, finalize, switchMap, throwError } from "rxjs";
 import { StorageService } from "../services/storage.service";
 import { AuthService } from "../services/auth.service";
+import { CommonService } from "../services/common.service";
 
 export function httpReqInterceptor(
   req: HttpRequest<unknown>,
@@ -15,6 +16,8 @@ export function httpReqInterceptor(
 ): Observable<HttpEvent<unknown>> {
   const storageService = inject(StorageService);
   const authService = inject(AuthService);
+  const commonService = inject(CommonService);
+
   const token = storageService.getAccessToken();
   const refreshToken = storageService.getRefreshToken();
 
@@ -32,6 +35,7 @@ export function httpReqInterceptor(
         error.status === 401
       ) {
         if (storageService.isLoggedIn()) {
+          commonService.displayLoader();
           console.log("Fetching token using refresh token....");
           return authService.getTokenUsingRefreshToken(refreshToken).pipe(
             switchMap((res: any) => {
@@ -49,7 +53,8 @@ export function httpReqInterceptor(
             catchError((err) => {
               authService.logout();
               return throwError(() => error);
-            })
+            }),
+            finalize(() => commonService.hideLoader())
           );
         }
       }

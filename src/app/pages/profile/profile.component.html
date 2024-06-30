@@ -1,1 +1,21 @@
-<p>profile works!</p>
+<div *ngIf="userDetails" class="container mt-5 aia__profile">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10">
+      <div class="card">
+        <div class="card-body">
+          <div class="user__info">
+            <div class="user__info--item" *ngFor="let user of userInfo">
+              <ng-container *ngIf="user.label != 'Image'; else imgTemp">
+                <label>{{ user.label }}</label>
+                <h6>{{ user.value }}</h6>
+              </ng-container>
+              <ng-template #imgTemp>
+                <img [src]="user.value" [alt]="userDetails.username" />
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,31 @@
+.aia__profile {
+  .card-body {
+    img {
+      height: 70px;
+      width: 70px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .user__info {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      column-gap: 10px;
+      row-gap: 10px;
+      margin-top: 25px;
+      &--item {
+        width: 30%;
+        label {
+          color: #959595;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .user__info--item {
+    width: 100% !important;
+  }
+}

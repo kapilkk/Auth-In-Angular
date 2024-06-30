@@ -1,14 +1,18 @@
 <div *ngIf="currentUser" class="aia__header">
-  <h1>AIA</h1>
+  <h1>
+    <a routerLink="/dashboard">AIA</a>
+  </h1>
 
   <div class="aia__header--profile">
-    <span class="aia__header--profile-username">{{
-      currentUser.username
-    }}</span>
-    <img
-      class="aia__header--profile-pic"
-      [src]="currentUser.image"
-      alt="user image"
-    />
+    <a routerLink="/profile">
+      <span class="aia__header--profile-username">{{
+        currentUser.username
+      }}</span>
+      <img
+        class="aia__header--profile-pic"
+        [src]="currentUser.image"
+        alt="user image"
+      />
+    </a>
   </div>
 </div>

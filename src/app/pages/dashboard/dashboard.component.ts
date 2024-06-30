@@ -1,15 +1,23 @@
 import { Component, OnInit } from "@angular/core";
 import { AuthService } from "../../core/services/auth.service";
+import { UserService } from "../../core/services/user.service";
+import { IUser } from "../../core/models";
+import { CommonModule } from "@angular/common";
 
 @Component({
-  selector: "app-dashboard",
+  selector: "aia-dashboard",
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: "./dashboard.component.html",
   styleUrl: "./dashboard.component.scss",
 })
 export class DashboardComponent implements OnInit {
-  constructor(private authService: AuthService) {}
+  user: IUser;
+
+  constructor(
+    private authService: AuthService,
+    private userService: UserService
+  ) {}
 
   ngOnInit(): void {
     this.getUser();
@@ -18,9 +26,15 @@ export class DashboardComponent implements OnInit {
   getUser() {
     this.authService.getCurrentUser().subscribe({
       next: (res) => {
-        console.log(res);
+        this.user = res as IUser;
+        this.userService.setUser(res as IUser);
       },
       error: (err) => {},
     });
+  }
+
+  //events
+  onLogout() {
+    this.authService.logout();
   }
 }

@@ -5,10 +5,14 @@ import { Constants } from "../constants/constants";
   providedIn: "root",
 })
 export class StorageService {
-  constructor() {}
+  storage;
+
+  constructor() {
+    this.storage = window.localStorage;
+  }
 
   saveAccessToken(token: string) {
-    window.localStorage.setItem(Constants.ACCESS_TOKEN_KEY, token);
+    this.storage.setItem(Constants.ACCESS_TOKEN_KEY, token);
   }
 
   saveRefreshToken(token: string) {
@@ -16,21 +20,23 @@ export class StorageService {
       token,
       expiry: Date.now() + Constants.REFRESH_TOKEN_EXPIRY * 60 * 1000,
     };
-    window.localStorage.setItem(
-      Constants.REFRESH_TOKEN_KEY,
-      JSON.stringify(val)
-    );
+    this.storage.setItem(Constants.REFRESH_TOKEN_KEY, JSON.stringify(val));
   }
 
   getAccessToken() {
-    return window.localStorage.getItem(Constants.ACCESS_TOKEN_KEY);
+    return this.storage.getItem(Constants.ACCESS_TOKEN_KEY);
   }
 
   getRefreshToken() {
-    const val = window.localStorage.getItem(Constants.REFRESH_TOKEN_KEY);
-    if (val) return JSON.parse(val);
+    const val = this.storage.getItem(Constants.REFRESH_TOKEN_KEY);
+    if (val) return JSON.parse(val).token;
 
     return {};
+  }
+
+  clear() {
+    this.storage.removeItem(Constants.ACCESS_TOKEN_KEY);
+    this.storage.removeItem(Constants.REFRESH_TOKEN_KEY);
   }
 
   isLoggedIn(): boolean {

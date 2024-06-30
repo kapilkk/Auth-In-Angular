@@ -11,7 +11,7 @@ import { StorageService } from "../../../core/services/storage.service";
 import { Router } from "@angular/router";
 
 @Component({
-  selector: "app-sign-in",
+  selector: "aia-sign-in",
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: "./sign-in.component.html",
@@ -54,7 +54,6 @@ export class SignInComponent implements OnInit {
       .login(this.signInForm.value.username, this.signInForm.value.password)
       .subscribe({
         next: (res: any) => {
-          console.log(res);
           this.storageService.saveAccessToken(res.token);
           this.storageService.saveRefreshToken(res.refreshToken);
           this.router.navigate(["/dashboard"]);

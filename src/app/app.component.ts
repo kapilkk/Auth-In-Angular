@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { RouterOutlet } from "@angular/router";
+import { Router, RouterOutlet } from "@angular/router";
 import { HeaderComponent } from "./shared/header/header.component";
 import { LoaderComponent } from "./shared/loader/loader.component";
 import { CommonService } from "./core/services/common.service";
@@ -14,18 +14,20 @@ import { StorageService } from "./core/services/storage.service";
   styleUrl: "./app.component.scss",
 })
 export class AppComponent implements OnInit {
-  title = "Auth-In-Angular";
   isLoader: boolean;
 
   constructor(
     private commonService: CommonService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.commonService.loader$.subscribe((res) => {
       this.isLoader = res;
     });
+
+    if (this.isLoggedIn) this.router.navigate(["/dashboard"]);
   }
 
   get isLoggedIn() {

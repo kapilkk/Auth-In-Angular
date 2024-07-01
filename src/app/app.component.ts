@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.commonService.loader$.subscribe((res) => {
-      this.isLoader = res;
+      setTimeout(() => (this.isLoader = res), 0);
     });
 
     if (this.isLoggedIn) this.router.navigate(["/dashboard"]);
